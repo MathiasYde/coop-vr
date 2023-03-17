@@ -45,10 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09a0e5df41abf814f8f3ad680ea172b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  messenger: {fileID: 11400000, guid: 3eb591e1e2161bf4b9f05d963b4adb5d, type: 2}
-  onMessage:
-    m_PersistentCalls:
-      m_Calls: []
+  messenger: {fileID: 11400000, guid: 06a9e0916cc3bf949a79ef34af344111, type: 2}
 --- !u!114 &676036370278503207
 MonoBehaviour:
   m_ObjectHideFlags: 0
