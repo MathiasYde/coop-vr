@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using uPLibrary.Networking.M2Mqtt;
 using uPLibrary.Networking.M2Mqtt.Messages;
+using Valve.Newtonsoft.Json;
 
 namespace MessageSystem {
 	[CreateAssetMenu(menuName = "MessageManager/Messengers/MQTTMessenger")]
@@ -25,17 +26,19 @@ namespace MessageSystem {
 		}
 
 		private void onMqttMessage(object sender, MqttMsgPublishEventArgs args) {
+			// TODO: refactor use a main thread dispatcher
+			
 			// parse the message and call onMessage event
-			try {
+			
+			// try {
 				string json = System.Text.Encoding.UTF8.GetString(args.Message);
-				var payload = JsonUtility.FromJson<Dictionary<string, object>>(json);
-
+				var payload = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
+			
 				onMessage.Invoke(new Message(args.Topic, payload));
-
-				Debug.Log($"MQTTMessenger: Got message [{args.Topic}] {json}");
-			} catch (Exception exception) {
-				// Debug.LogError(exception, this); // this is throwing an error
-			}
+				
+			// } catch (Exception exception) {
+			// 	Debug.Log(exception); // this is throwing an error
+			// }
 		}
 
 		public override void Update() { }
