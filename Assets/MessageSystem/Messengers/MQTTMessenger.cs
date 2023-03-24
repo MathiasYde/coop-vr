@@ -26,19 +26,18 @@ namespace MessageSystem {
 		}
 
 		private void onMqttMessage(object sender, MqttMsgPublishEventArgs args) {
-			// TODO: refactor use a main thread dispatcher
-			
-			// parse the message and call onMessage event
-			
-			// try {
-				string json = System.Text.Encoding.UTF8.GetString(args.Message);
-				var payload = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
-			
-				onMessage.Invoke(new Message(args.Topic, payload));
-				
-			// } catch (Exception exception) {
-			// 	Debug.Log(exception); // this is throwing an error
-			// }
+			// MainThreadDispatcher is used since the MqttClient uses threading
+			MainThreadDispatcher.Enqueue(() => {
+				// parse the message and call onMessage event
+				try {
+					string json = System.Text.Encoding.UTF8.GetString(args.Message);
+					var payload = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
+					
+					onMessage.Invoke(new Message(args.Topic, payload));
+				} catch (Exception exception) {
+					Debug.LogError(exception);
+				}
+			});
 		}
 
 		public override void Update() { }
