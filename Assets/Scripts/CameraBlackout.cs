@@ -22,7 +22,7 @@ public class CameraBlackout : MonoBehaviour {
 
 	private void Update() {
 		if (blackout) {
-			if (Vector3.Dot(returnNormal, head.position - returnPoint) > 0.0f) {
+			if (Vector3.Dot(returnNormal, (head.position - returnPoint).normalized) > 0.0f) {
 				blackout = false;
 			}
 		}
@@ -36,7 +36,7 @@ public class CameraBlackout : MonoBehaviour {
 				blackout = true;
 			}
 		}
-		}
+	}
 
 	private void OnDrawGizmos() {
 		if (blackout) {

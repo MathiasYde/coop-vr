@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace MessageSystem {
@@ -15,8 +16,12 @@ namespace MessageSystem {
 			onMessageUnityEvent ??= new MessageUnityEvent();
 		}
 
-		private void Start() {
+		private void OnEnable() {
 			MessageManager.instance.Listen(onMessage, topic);
+		}
+
+		private void OnDisable() {
+			MessageManager.instance.Unlisten(onMessage);
 		}
 	}
 }

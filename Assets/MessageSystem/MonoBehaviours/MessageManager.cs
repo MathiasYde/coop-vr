@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace MessageSystem {
 	
@@ -14,6 +15,7 @@ namespace MessageSystem {
 		public void SendMessage(Message message) { messenger.SendMessage(message); }
 
 		public void Listen(Action<Message> listener, string topic) {
+			// TODO: risk of memory leak by loading a new scene and not removing old listeners
 			// TODO: is there a better way to do this?
 			if (!listeners.ContainsKey(topic))
 				listeners[topic] = new List<Action<Message>>();
@@ -21,6 +23,13 @@ namespace MessageSystem {
 			listeners[topic].Add(listener);
 
 			messenger.Listen(topic);
+		}
+		
+		public void Unlisten(Action<Message> listener) {
+			// copilot
+			foreach (KeyValuePair<string, List<Action<Message>>> pair in listeners) {
+				pair.Value.Remove(listener);
+			}
 		}
 
 		private void Awake() {
@@ -32,7 +41,7 @@ namespace MessageSystem {
 		}
 
 		private void Update() {
-			messenger?.Update();
+			messenger.Update();
 		}
 		
 		private void OnMessage(Message message) {
@@ -43,15 +52,24 @@ namespace MessageSystem {
 				}
 			}
 		}
+		
+		private void OnSceneLoad(Scene scene, LoadSceneMode mode) {
+			// remove all listeners
+			listeners?.Clear();
+		}
 
 		private void OnEnable() {
 			messenger.onMessage += OnMessage;
-			messenger?.Enable();
+			messenger.Enable();
+
+			SceneManager.sceneLoaded += OnSceneLoad;
 		}
 
 		private void OnDisable() {
 			messenger.onMessage -= OnMessage;
-			messenger?.Disable();
+			messenger.Disable();
+			
+			SceneManager.sceneLoaded -= OnSceneLoad;
 		}
 	}
 }

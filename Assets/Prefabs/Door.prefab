@@ -67,7 +67,7 @@ MonoBehaviour:
     - Key: 4
       Value: {fileID: 4353455727639114898}
     keyCollision: 0
-  patteren: 
+  pattern: 
 --- !u!120 &1584956694414902864
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -109,12 +109,7 @@ LineRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Positions:
-  - {x: 0.192134, y: 0.043220878, z: -0.08699998}
-  - {x: -0.108835, y: -0.15787937, z: -0.087000005}
-  - {x: 0, y: 0.20090094, z: -0.087000035}
-  - {x: -0.192134, y: 0.043220878, z: -0.08700004}
-  - {x: 0.108835, y: -0.15787937, z: -0.086999975}
+  m_Positions: []
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -398,7 +393,7 @@ MonoBehaviour:
     - Key: 4
       Value: {fileID: 4614228879810353507}
     keyCollision: 0
-  patteren: 
+  pattern: 
 --- !u!120 &1503833159006015789
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -440,12 +435,7 @@ LineRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Positions:
-  - {x: 0.192134, y: 0.043220878, z: -0.08699998}
-  - {x: -0.108835, y: -0.15787937, z: -0.087000005}
-  - {x: 0, y: 0.20090094, z: -0.087000035}
-  - {x: -0.192134, y: 0.043220878, z: -0.08700004}
-  - {x: 0.108835, y: -0.15787937, z: -0.086999975}
+  m_Positions: []
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -511,6 +501,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4826398593735663475}
   - component: {fileID: 3021878196394785272}
+  - component: {fileID: 5565822525619779619}
   m_Layer: 0
   m_Name: ActivationArea
   m_TagString: Untagged
@@ -546,6 +537,49 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 2, z: 1}
   m_Center: {x: 0, y: -0.6, z: -0.5}
+--- !u!114 &5565822525619779619
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7596332116493178125}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc9060a95dd30304bb63d66c31dfbd4e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tag: Player
+  onTriggerEnterEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4734229595808062164}
+        m_TargetAssemblyTypeName: DoorLights, Assembly-CSharp
+        m_MethodName: ActivateLights
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  onTriggerExitEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4734229595808062164}
+        m_TargetAssemblyTypeName: DoorLights, Assembly-CSharp
+        m_MethodName: DeactivateLights
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &8525422389460554813
 GameObject:
   m_ObjectHideFlags: 0
@@ -556,6 +590,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1783136725874087439}
   - component: {fileID: 7970056969308250564}
+  - component: {fileID: 2923177234551367912}
   m_Layer: 0
   m_Name: ActivationArea
   m_TagString: Untagged
@@ -591,6 +626,49 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 2, z: 1}
   m_Center: {x: 0, y: -0.6, z: -0.5}
+--- !u!114 &2923177234551367912
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8525422389460554813}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc9060a95dd30304bb63d66c31dfbd4e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tag: Player
+  onTriggerEnterEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6479387356693884377}
+        m_TargetAssemblyTypeName: DoorLights, Assembly-CSharp
+        m_MethodName: ActivateLights
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  onTriggerExitEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6479387356693884377}
+        m_TargetAssemblyTypeName: DoorLights, Assembly-CSharp
+        m_MethodName: DeactivateLights
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1001 &540453724033797531
 PrefabInstance:
   m_ObjectHideFlags: 0
