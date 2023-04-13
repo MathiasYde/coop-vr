@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 public class TriggerCollider : MonoBehaviour {
-	[SerializeField] private string tag;
+	[SerializeField] private Optional<string> targetTag;
 	
 	[Header("Events")]
 	[SerializeField] private UnityEvent onTriggerEnterEvent;
@@ -14,12 +14,12 @@ public class TriggerCollider : MonoBehaviour {
 	}
 
 	private void OnTriggerEnter(Collider other) {
-		if (other.CompareTag(tag))
+		if (targetTag.Enabled && other.CompareTag(targetTag.Value))
 			onTriggerEnterEvent?.Invoke();
 	}
 
 	private void OnTriggerExit(Collider other) {
-		if (other.CompareTag(tag))
+		if (targetTag.Enabled && other.CompareTag(targetTag.Value))
 			onTriggerExitEvent?.Invoke();
 	}
 }
