@@ -1,9 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using DG.Tweening;
 using MessageSystem;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class DoorLights : MonoBehaviour {
+	[SerializeField] private Transform door;
+	
 	[SerializeField] private Transform lineOffset;
 	[SerializeField] private LineRenderer lineRenderer;
 
@@ -11,23 +16,43 @@ public class DoorLights : MonoBehaviour {
 
 	[SerializeField] private List<LightColor> pattern;
 
+
+	private Dictionary<LightColor, Material> lightMaterials = new Dictionary<LightColor, Material>();
+
+	[Header("Events")]
+	[SerializeField] private UnityEvent onPatternSuccessEvent;
+	[SerializeField] private UnityEvent onPatternFailEvent;
+	
+	private int currentPatternIndex = 0;
+
 	private void Awake() {
-		lineRenderer ??= GetComponent<LineRenderer>();
-	}
+		this.lineRenderer ??= GetComponent<LineRenderer>();
 
-	private void Start() {
-		RandomizePattern();
-		UpdateLineRenderer(pattern);
-		SetLightColors();
+		this.onPatternSuccessEvent ??= new UnityEvent();
+		this.onPatternFailEvent ??= new UnityEvent();
 
-		lineRenderer.enabled = true;
+		foreach (KeyValuePair<LightColor, GameObject> pair in lights) {
+			// cache material components
+			LightColor lightColor = pair.Key;
+			GameObject lightGameObject = pair.Value;
+
+			Material material = lightGameObject.GetComponent<Renderer>().material;
+			lightMaterials[lightColor] = material;
+
+			// set color and disable emission
+			material.color = lightColor.ToColor() ?? Color.black;
+			
+			material.SetColor(MaterialKeywords.EmissionColor, lightColor.ToColor() ?? Color.black);
+			material.DisableKeyword(MaterialKeywords.Emission);
+		}
 	}
 	
-	private void SetLightColors() {
-		foreach (KeyValuePair<LightColor, GameObject> pair in lights) {
-			Material material = pair.Value.GetComponent<Renderer>().material;
-			material.color = pair.Key.ToColor() ?? Color.black;
-		}
+
+	private void Start() {
+		this.pattern = GetRandomPattern();
+		UpdateLineRenderer(this.pattern);
+
+		// lineRenderer.enabled = true;
 	}
 
 	private void OnValidate() {
@@ -36,8 +61,13 @@ public class DoorLights : MonoBehaviour {
 
 	public void ActivateLights() {
 		Debug.Log("Activating lights");
-		// MessageManager.Listen(OnMessage, "door_open");
-		MessageManager.instance.Listen(OnMessage, "controlpanel/buttons");
+		
+		// reset progress
+		currentPatternIndex = 0;
+		
+		PulsateLight(pattern[currentPatternIndex]);
+		
+		MessageManager.instance.Listen(OnMessage, MessageTopics.ControlPanelButtons);
 	}
 
 	public void DeactivateLights() {
@@ -46,13 +76,68 @@ public class DoorLights : MonoBehaviour {
 		MessageManager.instance.Unlisten(OnMessage);
 	}
 
+	private void PulsateLight(LightColor lightColor) {
+		Material material = lightMaterials[lightColor];
+
+		Color newColor = Color.Lerp(Color.white, lightColor.ToColor() ?? Color.black, 0.5f);
+		
+		material.EnableKeyword(MaterialKeywords.Emission);
+		material
+			.DOColor(newColor, MaterialKeywords.EmissionColor, 1f)
+			.SetLoops(-1, LoopType.Yoyo);
+	}
+
+	private void OnValidButtonPress() {
+		{ // stop pulsating on current light
+			LightColor currentColor = pattern[currentPatternIndex];
+			Material currentMaterial = lightMaterials[currentColor];
+
+			// skip to end of animation to stay on high emission
+			currentMaterial.DOGoto(1.0f);
+		}
+
+		currentPatternIndex += 1;
+		if (currentPatternIndex >= pattern.Count) {
+			DeactivateLights();
+			onPatternSuccessEvent?.Invoke();
+			return;
+		}
+
+		{
+			LightColor newColor = pattern[currentPatternIndex];
+			PulsateLight(newColor);
+		}
+	}
+
+	public void RandomizePattern() {
+		this.pattern = GetRandomPattern();
+		UpdateLineRenderer(this.pattern);
+
+		currentPatternIndex = 0;
+		
+		// TODO handle tweens
+
+		foreach (Material material in lightMaterials.Values) {
+			material.DisableKeyword(MaterialKeywords.Emission);
+			material.DOKill();
+		}
+	}
+
 	private void OnMessage(Message message) {
-		Debug.Log("Got message");
-		Debug.Log(message);
+		LightColor currentColor = pattern[currentPatternIndex];
+
+		string pressedButton = message.payload.First(pair => (bool)pair.Value == true).Key;
+		
+		if (pressedButton == currentColor.ToString().ToLower()) {
+			OnValidButtonPress();
+		}
+		else {
+			onPatternFailEvent?.Invoke();
+		}
 	}
 	
-	private void RandomizePattern() {
-		pattern.Clear();
+	private List<LightColor> GetRandomPattern() {
+		List<LightColor> pattern = new List<LightColor>();
 		
 		// add all colors to the pattern
 		foreach (LightColor color in Enum.GetValues(typeof(LightColor))) {
@@ -60,12 +145,14 @@ public class DoorLights : MonoBehaviour {
 		}
 		
 		pattern.Shuffle();
+
+		return pattern;
 	}
 
-	private void UpdateLineRenderer(List<LightColor> lightOrder) {
-		lineRenderer.positionCount = lightOrder.Count;
+	private void UpdateLineRenderer(List<LightColor> pattern) {
+		lineRenderer.positionCount = pattern.Count;
 		
-		for (int i = 0; i < lightOrder.Count; i++) {
+		for (int i = 0; i < pattern.Count; i++) {
 			LightColor color = pattern[i];
 			GameObject gameObject = lights[color];
 			
@@ -94,20 +181,6 @@ public class DoorLights : MonoBehaviour {
 			
 			Gizmos.DrawLine(current, next);
 		}
-
-		// List<Vector3> positions = new List<Vector3>();
-		// foreach (GameObject gameObject in lights.Values) {
-		// 	positions.Add(gameObject.transform.position + offset);
-		// }
-		//
-		// Gizmos.color = Color.red;
-		//
-		// for (int i = 0; i < pattern.Count - 1; i++) {
-		// 	Vector3 current = positions[i];
-		// 	Vector3 next = positions[i + 1];
-		// 	
-		// 	Gizmos.DrawLine(current, next);
-		// }
 	}
 
 	private void OnDisable() {

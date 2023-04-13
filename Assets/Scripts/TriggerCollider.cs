@@ -1,5 +1,8 @@
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Events;
+
+[assembly: InternalsVisibleTo("TriggerColliderEditor")]
 
 public class TriggerCollider : MonoBehaviour {
 	[SerializeField] private Optional<string> targetTag;

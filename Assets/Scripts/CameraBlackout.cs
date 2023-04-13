@@ -1,15 +1,14 @@
-using System;
 using UnityEngine;
 
 public class CameraBlackout : MonoBehaviour {
-	[SerializeField] private bool blackout;
-
 	[SerializeField] private float maxWallDistance = 0.25f;
 	[SerializeField] private Transform head;
 	[SerializeField] private LayerMask layerMask;
 	
 	private Material fadeMaterial;
 	private int fadeMaterialColorID = -1;
+	
+	private bool blackout;
 	private Vector3 returnPoint;
 	private Vector3 returnNormal;
 
@@ -22,6 +21,7 @@ public class CameraBlackout : MonoBehaviour {
 
 	private void Update() {
 		if (blackout) {
+			// check for returning
 			if (Vector3.Dot(returnNormal, (head.position - returnPoint).normalized) > 0.0f) {
 				blackout = false;
 			}
@@ -39,6 +39,7 @@ public class CameraBlackout : MonoBehaviour {
 	}
 
 	private void OnDrawGizmos() {
+		// draw the intersection point and normal vector of the intersecting wall
 		if (blackout) {
 			Gizmos.color = Color.red;
 			
@@ -51,6 +52,8 @@ public class CameraBlackout : MonoBehaviour {
 	private void OnPostRender() {
 		if (!blackout) { return; }
 			
+		// draw a black quad over the screen
+		// code taken from SteamVR_Fade.cs
 		fadeMaterial.SetColor(fadeMaterialColorID, Color.black);
 		fadeMaterial.SetPass(0);
 		
