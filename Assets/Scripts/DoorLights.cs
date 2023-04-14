@@ -69,8 +69,6 @@ public class DoorLights : MonoBehaviour {
 	}
 
 	public void Reset() {
-		Debug.Log("Resetting");
-		
 		MessageManager.instance.Unlisten(OnMessage);
 		
 		RandomizePattern();
