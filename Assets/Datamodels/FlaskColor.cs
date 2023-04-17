@@ -1,4 +1,7 @@
-﻿public enum FlaskColor {
+﻿using System;
+
+[Serializable]
+public enum FlaskColor {
 	Red,
 	Orange,
 	Yellow,

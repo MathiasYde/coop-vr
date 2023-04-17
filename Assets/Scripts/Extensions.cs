@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 public static class Extensions {
-	private static float LIGHT_COLOR_LERP_AMOUNT = 0.2f;
+	private static float LIGHT_COLOR_LERP_AMOUNT = 0.6f;
 	private static Color LIGHT_WHITE_COLOR = Color.Lerp(Color.white, Color.black, LIGHT_COLOR_LERP_AMOUNT);
 	private static Color LIGHT_BLUE_COLOR = Color.Lerp(Color.blue, Color.black, LIGHT_COLOR_LERP_AMOUNT);
 	private static Color LIGHT_GREEN_COLOR = Color.Lerp(Color.green, Color.black, LIGHT_COLOR_LERP_AMOUNT);

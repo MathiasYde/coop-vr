@@ -18,11 +18,14 @@ namespace MessageSystem {
 		public override event Action<Message> onMessage;
 
 		private MqttClient client;
+
+		public override void SendMessage(string topic, string payload) {
+			client.Publish(topic, System.Text.Encoding.UTF8.GetBytes(payload));
+		}
 	
 		public override void SendMessage(Message message) {
-			string json = JsonUtility.ToJson(message.payload);
+			string json = JsonConvert.SerializeObject(message.payload);
 			client.Publish(message.topic, System.Text.Encoding.UTF8.GetBytes(json));
-			Debug.Log($"MQTTMessenger: Sent message [{message.topic}] {json}");
 		}
 
 		private void onMqttMessage(object sender, MqttMsgPublishEventArgs args) {

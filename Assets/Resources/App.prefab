@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6195511820136499135}
   - component: {fileID: 676036370278503207}
   - component: {fileID: 7732152416450196220}
+  - component: {fileID: -7920430373553299013}
   m_Layer: 0
   m_Name: App
   m_TagString: Untagged

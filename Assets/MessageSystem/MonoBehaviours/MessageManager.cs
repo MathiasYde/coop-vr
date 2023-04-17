@@ -14,6 +14,16 @@ namespace MessageSystem {
 
 		public void SendMessage(Message message) { messenger.SendMessage(message); }
 
+		public void SendMessageFromString(string message) {
+			// topic;payload
+			var splits = message.Split(";");
+			
+			string topic = splits[0];
+			string payload = splits[1];
+			
+			messenger.SendMessage(topic, payload);
+		}
+
 		public void Listen(Action<Message> listener, string topic) {
 			// TODO: risk of memory leak by loading a new scene and not removing old listeners
 			// TODO: is there a better way to do this?
