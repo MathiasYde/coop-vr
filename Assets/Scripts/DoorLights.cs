@@ -51,8 +51,6 @@ public class DoorLights : MonoBehaviour {
 	private void Start() {
 		this.pattern = GetRandomPattern();
 		UpdateLineRenderer(this.pattern);
-
-		// lineRenderer.enabled = true;
 	}
 
 	private void OnValidate() {
@@ -70,10 +68,10 @@ public class DoorLights : MonoBehaviour {
 		MessageManager.instance.Listen(OnMessage, MessageTopics.ControlPanelButtons);
 	}
 
-	public void DeactivateLights() {
-		Debug.Log("Deactivating lights");
-		
+	public void Reset() {
 		MessageManager.instance.Unlisten(OnMessage);
+		
+		RandomizePattern();
 	}
 
 	private void PulsateLight(LightColor lightColor) {
@@ -98,8 +96,8 @@ public class DoorLights : MonoBehaviour {
 
 		currentPatternIndex += 1;
 		if (currentPatternIndex >= pattern.Count) {
-			DeactivateLights();
 			onPatternSuccessEvent?.Invoke();
+			Reset();
 			return;
 		}
 
@@ -114,12 +112,17 @@ public class DoorLights : MonoBehaviour {
 		UpdateLineRenderer(this.pattern);
 
 		currentPatternIndex = 0;
-		
-		// TODO handle tweens
 
 		foreach (Material material in lightMaterials.Values) {
 			material.DisableKeyword(MaterialKeywords.Emission);
 			material.DOKill();
+		}
+
+		{
+			// enable emission on first light in pattern
+			LightColor currentColor = pattern[currentPatternIndex];
+			
+			PulsateLight(currentColor);
 		}
 	}
 
@@ -184,6 +187,6 @@ public class DoorLights : MonoBehaviour {
 	}
 
 	private void OnDisable() {
-		DeactivateLights();
+		Reset();
 	}
 }
