@@ -58,9 +58,6 @@ public class DoorLights : MonoBehaviour {
 	}
 
 	public void ActivateLights() {
-		Debug.Log("Activating lights");
-		
-		// reset progress
 		currentPatternIndex = 0;
 		
 		PulsateLight(pattern[currentPatternIndex]);

@@ -1,9 +1,7 @@
-using System;
 using UnityEngine;
 
 namespace MessageSystem {
 	public class MessageListener : MonoBehaviour {
-		[Tooltip("The topic to listen to")]
 		[SerializeField] private string topic;
 
 		public MessageUnityEvent onMessageUnityEvent;

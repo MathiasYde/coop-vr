@@ -25,7 +25,6 @@ namespace MessageSystem {
 		}
 
 		public void Listen(Action<Message> listener, string topic) {
-			// TODO: risk of memory leak by loading a new scene and not removing old listeners
 			// TODO: is there a better way to do this?
 			if (!listeners.ContainsKey(topic))
 				listeners[topic] = new List<Action<Message>>();

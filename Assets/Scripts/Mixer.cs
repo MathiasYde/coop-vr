@@ -48,8 +48,7 @@ public class Mixer : MonoBehaviour {
 		onCorrectSolutionEvent ??= new UnityEvent();
 		
 		stands ??= new GenericDictionary<FlaskColor, GameObject>();
-		// buttons ??= new GenericDictionary<FlaskColor, GameObject>();
-		
+
 		buttonStates = new Dictionary<FlaskColor, bool>();
 		
 		// cache materials
@@ -70,15 +69,6 @@ public class Mixer : MonoBehaviour {
 			FlaskColor flaskColor = pair.Key;
 			buttonStates[flaskColor] = false;
 		}
-		
-		// // set color of stands
-		// foreach (KeyValuePair<FlaskColor, GameObject> pair in stands) {
-		// 	FlaskColor flaskColor = pair.Key;
-		// 	GameObject stand = pair.Value;
-		// 	
-		// 	Renderer standRenderer = stand.GetComponent<Renderer>();
-		// 	standRenderer.material.color = flaskColor.ToColor() ?? Color.black;
-		// }
 	}
 
 	private void CheckSolutionMatch() {
